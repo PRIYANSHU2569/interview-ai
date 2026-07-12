@@ -12,7 +12,7 @@ async function authUser(req, res, next) {
     token,
   });
 
-  if (isTokenBalcklisted) {
+  if (isTokenBlacklisted) {
     return res.status(401).json({
       message: "Token is invalid",
     });
