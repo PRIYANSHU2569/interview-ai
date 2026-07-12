@@ -7,7 +7,9 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => { 
 
     const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(false)
+    // Wait for the initial /get-me request before protected routes decide whether
+    // the visitor is authenticated.
+    const [loading, setLoading] = useState(true)
 
     
 
