@@ -139,13 +139,22 @@ const Interview = () => {
     }
   }, [interviewId]);
 
+  // if (loading || !report) {
+  //   return (
+  //     <main className="loading-screen">
+  //       <h1>Loading your interview plan...</h1>
+  //     </main>
+  //   );
+  // }
   if (loading || !report) {
-    return (
-      <main className="loading-screen">
-        <h1>Loading your interview plan...</h1>
-      </main>
-    );
-  }
+  return (
+    <main className="loading-screen">
+      <div className="spinner"></div>
+      <h2>Generating your interview report...</h2>
+      <p>Please wait, this may take a few seconds.</p>
+    </main>
+  );
+}
 
   const scoreColor =
     report.matchScore >= 80

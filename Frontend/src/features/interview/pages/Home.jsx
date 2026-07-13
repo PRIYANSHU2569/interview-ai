@@ -7,6 +7,7 @@ const Home = () => {
   const { loading, generateReport, reports } = useInterview();
   const [jobDescription, setJobDescription] = useState("");
   const [selfDescription, setSelfDescription] = useState("");
+  const [resumeName, setResumeName] = useState("");
   const resumeInputRef = useRef();
 
   const navigate = useNavigate();
@@ -24,7 +25,14 @@ const Home = () => {
   if (loading) {
     return (
       <main className="loading-screen">
-        <h1>Loading your interview plan...</h1>
+        <div className="spinner"></div>
+
+        <h2>Generating Your Interview Strategy</h2>
+
+        <p>
+          Analyzing your resume, matching it with the job description, and
+          creating personalized interview questions...
+        </p>
       </main>
     );
   }
@@ -130,7 +138,8 @@ const Home = () => {
                 <p className="dropzone__title">
                   Click to upload or drag &amp; drop
                 </p>
-                <p className="dropzone__subtitle">PDF or DOCX (Max 5MB)</p>
+                <p className="dropzone__subtitle">PDF or DOCX (Max 3MB)</p>
+           
                 <input
                   ref={resumeInputRef}
                   hidden
@@ -138,8 +147,22 @@ const Home = () => {
                   id="resume"
                   name="resume"
                   accept=".pdf,.docx"
+                  onChange={(e) => {
+                    if (e.target.files.length > 0) {
+                      setResumeName(e.target.files[0].name);
+                    }
+                  }}
                 />
               </label>
+              {resumeName && (
+                <div className="uploaded-file">
+                  <div className="file-name">📄 {resumeName}</div>
+
+                  <div className="file-status">
+                    ✔ Resume uploaded successfully
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* OR Divider */}
