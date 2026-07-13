@@ -1,9 +1,11 @@
-@use "./style/button.scss" ;
+@use "./style/button.scss";
+
 * {
   margin: 0%;
   padding: 0%;
   box-sizing: border-box;
 }
+
 html,
 body,
 #root {
@@ -22,4 +24,8 @@ body,
     "Open Sans",
     "Helvetica Neue",
     sans-serif;
+}
+
+.highlight {
+  color: #d20d3b;
 }

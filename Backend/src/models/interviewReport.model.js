@@ -1,38 +1,5 @@
 const mongoose = require("mongoose");
 
-/**
- * - job description schema:String
- * - resume text :String
- * - self description: string
- *
- * - matchScore :NUmber
- * - Technical question:
- * [{
- *  question:"",
- * intention :"",
- * answer:" ",
- * }]
- * - Behavioral question:[{
- *  question:"",
- * intention :"",
- * answer:" ",
- * }]
- * - Skill gaps:[{
- * skill:"",
- * severity :{
- * type : String,
- * enum : ["low","medium","high"]
- * }
- *
- * }]
- * - preparation plan:[{
- * day :Number,
- * focus : String,
- * task:[String]
- * }]
- *
- */
-
 const technicalQuestionSchema = new mongoose.Schema(
   {
     question: {
@@ -52,6 +19,7 @@ const technicalQuestionSchema = new mongoose.Schema(
     _id: false,
   },
 );
+
 const behavioralQuestionSchema = new mongoose.Schema(
   {
     question: {
@@ -71,6 +39,7 @@ const behavioralQuestionSchema = new mongoose.Schema(
     _id: false,
   },
 );
+
 const skillGapSchema = new mongoose.Schema(
   {
     skill: {
@@ -87,6 +56,7 @@ const skillGapSchema = new mongoose.Schema(
     _id: false,
   },
 );
+
 const preparationPlanSchema = new mongoose.Schema({
   day: {
     type: Number,
@@ -103,11 +73,12 @@ const preparationPlanSchema = new mongoose.Schema({
     },
   ],
 });
+
 const interviewReportSchema = new mongoose.Schema(
   {
-    jobdescription: {
+    jobDescription: {
       type: String,
-      required: [true, "job description is required"],
+      required: [true, "Job description is required"],
     },
     resume: {
       type: String,
@@ -137,6 +108,7 @@ const interviewReportSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
 const interviewReportModel = mongoose.model(
   "InterviewReport",
   interviewReportSchema,
