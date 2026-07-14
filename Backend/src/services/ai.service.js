@@ -114,7 +114,18 @@ ${selfDescription}
 Job Description:
 ${jobDescription}`;
 
-  const response = await ai.models.generateContent({
+  // const response = await ai.models.generateContent({
+  //   model: "gemini-3.5-flash",
+  //   contents: prompt,
+  //   config: {
+  //     responseMimeType: "application/json",
+  //     responseSchema: zodToJsonSchema(interviewReportSchema),
+  //   },
+  // });
+  let response;
+
+try {
+  response = await ai.models.generateContent({
     model: "gemini-3.5-flash",
     contents: prompt,
     config: {
@@ -122,6 +133,17 @@ ${jobDescription}`;
       responseSchema: zodToJsonSchema(interviewReportSchema),
     },
   });
+} catch (err) {
+  console.error("Gemini Error:", err);
+
+  if (err.status === 429) {
+    throw new Error(
+      "Gemini API quota exceeded. Please try again after a minute."
+    );
+  }
+
+  throw err;
+}
 
   console.log(response.text);
 
@@ -170,7 +192,10 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
                         The resume should not be so lengthy, it should ideally be 1-2 pages long when converted to PDF. Focus on quality rather than quantity and make sure to include all the relevant information that can increase the candidate's chances of getting an interview call for the given job description.
                     `;
 
-  const response = await ai.models.generateContent({
+  let response;
+
+try {
+  response = await ai.models.generateContent({
     model: "gemini-3.5-flash",
     contents: prompt,
     config: {
@@ -178,6 +203,17 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
       responseSchema: zodToJsonSchema(resumePdfSchema),
     },
   });
+} catch (err) {
+  console.error("Gemini Error:", err);
+
+  if (err.status === 429) {
+    throw new Error(
+      "Gemini API quota exceeded. Please try again after a minute."
+    );
+  }
+
+  throw err;
+}
 
   const jsonContent = JSON.parse(response.text);
 

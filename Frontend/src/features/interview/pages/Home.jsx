@@ -7,21 +7,24 @@ const Home = () => {
   const { loading, generateReport, reports } = useInterview();
   const [jobDescription, setJobDescription] = useState("");
   const [selfDescription, setSelfDescription] = useState("");
-  const [resumeName, setResumeName] = useState("");
-  const resumeInputRef = useRef();
+  const [resumeFile, setResumeFile] = useState(null);
+const [resumeName, setResumeName] = useState("");
 
   const navigate = useNavigate();
 
-  const handleGenerateReport = async () => {
-    const resumeFile = resumeInputRef.current.files[0];
-    const data = await generateReport({
-      jobDescription,
-      selfDescription,
-      resumeFile,
-    });
-    navigate(`/interview/${data._id}`);
-  };
+ const handleGenerateReport = async () => {
+ 
 
+  const data = await generateReport({
+    jobDescription,
+    selfDescription,
+    resumeFile,
+  });
+
+  if (data) {
+    navigate(`/interview/${data._id}`);
+  }
+};
   if (loading) {
     return (
       <main className="loading-screen">
@@ -135,24 +138,30 @@ const Home = () => {
                     <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
                   </svg>
                 </span>
-                <p className="dropzone__title">
-                  Click to upload or drag &amp; drop
-                </p>
-                <p className="dropzone__subtitle">PDF or DOCX (Max 3MB)</p>
-           
+              <p className="dropzone__title">
+  {resumeName || "Click to upload or drag & drop"}
+</p>
+               <p className="dropzone__subtitle">
+  {resumeName ? "✅ Resume uploaded successfully" : "PDF or DOCX (Max 3MB)"}
+</p>
+
                 <input
-                  ref={resumeInputRef}
-                  hidden
-                  type="file"
-                  id="resume"
-                  name="resume"
-                  accept=".pdf,.docx"
-                  onChange={(e) => {
-                    if (e.target.files.length > 0) {
-                      setResumeName(e.target.files[0].name);
-                    }
-                  }}
-                />
+  hidden
+  type="file"
+  id="resume"
+  name="resume"
+  accept=".pdf,.docx"
+  onChange={(e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setResumeFile(file);
+      setResumeName(file.name);
+
+      console.log("Selected:", file);
+    }
+  }}
+/>
               </label>
               {resumeName && (
                 <div className="uploaded-file">
