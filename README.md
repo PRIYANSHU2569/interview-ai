@@ -1,66 +1,114 @@
 # 🚀 Interview AI – AI-Powered Job Preparation Platform
 
-Interview AI is a **Full Stack AI-powered Job Preparation Platform** that helps users prepare for technical interviews using **Generative AI**. The platform analyzes resumes, identifies skill gaps based on job descriptions, generates personalized interview questions, and creates ATS-optimized resumes.
+Interview AI is a **production-ready Full Stack AI-powered Job Preparation Platform** that helps users prepare for technical interviews using **Google Gemini AI**. The platform analyzes resumes, compares them with job descriptions, identifies skill gaps, generates personalized interview questions, and creates ATS-friendly resumes in PDF format.
 
-Built using the **MERN Stack**, **Gemini AI**, **JWT Authentication**, and **Puppeteer**, this project demonstrates real-world full-stack development with AI integration.
+Built using the **MERN Stack**, **Gemini AI**, **JWT Authentication**, **MongoDB Atlas**, and **Puppeteer**, this project demonstrates real-world full-stack web development with AI integration.
+
+---
+
+## 🌐 Live Demo
+
+**🔗 Live Website:**  
+https://interview-ai-frontend-sf02.onrender.com
+
+**⚙️ Backend API:**  
+https://interview-ai-backend-sgmj.onrender.com
 
 ---
 
 ## ✨ Features
 
-- 🔐 Secure User Authentication (JWT)
+- 🔐 Secure User Authentication using JWT
+- 🍪 Cookie-Based Authentication
 - 🚪 Logout with Token Blacklisting
-- 📄 Resume Upload & Parsing
+- 📄 Resume Upload & PDF Parsing
 - 🤖 AI-Powered Resume Analysis
-- 🎯 Skill Gap Detection
 - 💼 Job Description Analysis
-- ❓ Personalized AI Interview Questions
-- 📑 ATS-Optimized Resume Generation
-- 📄 PDF Resume Generation using Puppeteer
+- 🎯 Skill Gap Detection
+- ❓ Personalized Technical Interview Questions
+- 🗣️ Behavioral Interview Questions
+- 📅 AI-Generated Preparation Plan
 - 📊 Interview Report Dashboard
-- 📱 Responsive User Interface
+- 📑 ATS-Optimized Resume Generation
+- 📄 Resume PDF Generation using Puppeteer
+- ☁️ Cloud Deployment using Render
+- 📱 Fully Responsive User Interface
 
 ---
 
-## 🛠️ Tech Stack
+# 🛠️ Tech Stack
 
-### Frontend
+## Frontend
+
 - React.js
 - React Router
 - Axios
 - Context API
+- SCSS
 
-### Backend
+## Backend
+
 - Node.js
 - Express.js
-- MongoDB
+- MongoDB Atlas
 - Mongoose
 
-### Authentication
-- JWT
+## Authentication
+
+- JWT (JSON Web Token)
 - bcryptjs
 - Cookie Parser
 
-### AI
+## Artificial Intelligence
+
 - Google Gemini API
 
-### Other Tools
+## Other Tools
+
 - Puppeteer
 - Multer
 - Zod
+- pdf-parse
 - Dotenv
 
 ---
 
-## 📂 Project Structure
+# 🏗️ System Architecture
 
+```text
+                     +--------------------+
+                     |      React.js      |
+                     |    Frontend UI     |
+                     +---------+----------+
+                               |
+                               |
+                           Axios API
+                               |
+                               ▼
+                    +----------------------+
+                    | Node.js + Express.js |
+                    |      Backend API     |
+                    +----------+-----------+
+                               |
+          +--------------------+--------------------+
+          |                    |                    |
+          ▼                    ▼                    ▼
+   MongoDB Atlas        Google Gemini AI      Puppeteer
+   User Data            AI Analysis          PDF Generator
 ```
+
+---
+
+# 📂 Project Structure
+
+```text
 Interview-AI/
 │
 ├── Frontend/
-│   ├── src/
 │   ├── public/
-│   └── package.json
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
 │
 ├── Backend/
 │   ├── src/
@@ -71,6 +119,7 @@ Interview-AI/
 │   │   ├── routes/
 │   │   ├── services/
 │   │   └── utils/
+│   │
 │   ├── server.js
 │   └── package.json
 │
@@ -79,9 +128,9 @@ Interview-AI/
 
 ---
 
-## ⚙️ Installation
+# ⚙️ Installation
 
-### Clone the repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/PRIYANSHU2569/interview-ai.git
@@ -89,14 +138,17 @@ git clone https://github.com/PRIYANSHU2569/interview-ai.git
 cd interview-ai
 ```
 
-### Backend Setup
+---
+
+# Backend Setup
 
 ```bash
 cd Backend
+
 npm install
 ```
 
-Create a `.env` file:
+Create a `.env` file inside the Backend folder.
 
 ```env
 PORT=3000
@@ -105,10 +157,12 @@ MONGO_URI=your_mongodb_connection_string
 
 JWT_SECRET=your_jwt_secret
 
-GEMINI_API_KEY=your_gemini_api_key
+GOOGLE_GENAI_API_KEY=your_google_gemini_api_key
+
+CLIENT_URL=http://localhost:5173
 ```
 
-Start the backend:
+Start Backend
 
 ```bash
 npm run dev
@@ -116,52 +170,157 @@ npm run dev
 
 ---
 
-### Frontend Setup
+# Frontend Setup
 
 ```bash
 cd Frontend
+
 npm install
+
 npm run dev
 ```
 
 ---
 
-## 📸 Screenshots
+# ☁️ Deployment
 
-- Login Page
-- Dashboard
-- Resume Analysis
-- Interview Report
-- ATS Resume Generator
+### Frontend
 
----
+- Render (Static Site)
 
-## 🚀 Future Enhancements
+### Backend
 
-- Voice-based AI Interview
-- Mock Interview Timer
-- AI Feedback & Scoring
-- Company-wise Interview Questions
-- Resume Version History
-- Email Reports
-- Admin Dashboard
+- Render (Web Service)
+
+### Database
+
+- MongoDB Atlas
+
+### AI
+
+- Google Gemini API
 
 ---
 
-## 🤝 Contributing
+# 📌 API Features
 
-Contributions, issues, and feature requests are welcome.
+### Authentication
 
-Feel free to fork this repository and submit a pull request.
+- User Registration
+- User Login
+- User Logout
+- Get Current User
+
+### Interview
+
+- Upload Resume
+- Resume Parsing
+- AI Interview Report Generation
+- Get Interview Report
+- Get All Interview Reports
+
+### Resume
+
+- ATS Resume Generation
+- Resume PDF Download
 
 ---
 
+# 📸 Screenshots
 
-## 👨‍💻 Author
+## 🏠 Home Page
+
+> <img width="1308" height="857" alt="image" src="https://github.com/user-attachments/assets/8ed75617-6487-4a19-ba84-13da8d07e4c1" />
+
+
+---
+
+## 🔐 Login Page
+
+><img width="1695" height="896" alt="image" src="https://github.com/user-attachments/assets/8ed05c06-1495-4c10-a04a-6f155724ac62" />
+
+
+---
+
+## 📄 Resume Upload
+
+> <img width="1917" height="976" alt="image" src="https://github.com/user-attachments/assets/8ca0ca84-8cde-46fc-924c-43ec53e96e01" />
+
+
+---
+
+## 🤖 AI Interview Report
+
+> <img width="1632" height="960" alt="image" src="https://github.com/user-attachments/assets/82b3acc6-ec4b-4ff2-b12a-86b4994dbbee" />
+
+
+---
+
+# 🚀 Future Enhancements
+
+- 🎤 Voice-Based AI Mock Interview
+- ⏱️ Interview Timer
+- 📈 AI Performance Score
+- 💬 AI Feedback after Interview
+- 🏢 Company-wise Interview Questions
+- 📚 Resume Version History
+- 📧 Email Reports
+- 📊 Admin Dashboard
+- 🌙 Dark Mode
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+If you'd like to improve this project:
+
+1. Fork the repository
+2. Create your feature branch
+
+```bash
+git checkout -b feature-name
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Added new feature"
+```
+
+4. Push to the branch
+
+```bash
+git push origin feature-name
+```
+
+5. Open a Pull Request
+
+---
+
+# 👨‍💻 Author
 
 **Priyanshu Gupta**
 
-- GitHub: https://github.com/PRIYANSHU2569
-- LinkedIn: https://www.linkedin.com/in/priyanshu-gupta-7474502b7/
+🎓 B.Tech CSE, VIT Bhopal
 
-⭐ If you found this project helpful, consider giving it a star!
+GitHub:
+https://github.com/PRIYANSHU2569
+
+LinkedIn:
+https://www.linkedin.com/in/priyanshu-gupta-7474502b7/
+
+---
+
+# ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
+
+It really helps and motivates me to build more open-source projects.
+
+---
+
+# 📄 License
+
+This project is licensed under the **MIT License**.
