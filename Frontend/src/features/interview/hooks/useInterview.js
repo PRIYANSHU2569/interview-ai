@@ -24,7 +24,6 @@ export const useInterview = () => {
     selfDescription,
     resumeFile,
   }) => {
-
     setLoading(true);
     let response = null;
     try {
