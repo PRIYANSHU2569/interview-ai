@@ -22,7 +22,7 @@ async function generateInterViewReportController(req, res) {
   console.log("AI Response:", interViewReportByAi);
   const interviewReport = await interviewReportModel.create({
     //make change 1
-    title: jobDescription,  
+    title: jobDescription,
     //
     user: req.user.id,
     resume: resumeContent.text,
@@ -59,7 +59,6 @@ async function getInterviewReportByIdController(req, res) {
     interviewReport,
   });
 }
-
 
 /**
  * @description Controller to get all interview reports of logged in user.
@@ -135,7 +134,6 @@ async function generateResumePdfController(req, res) {
     });
 
     res.send(pdfBuffer);
-
   } catch (err) {
     console.error("Resume PDF Error:", err);
 
