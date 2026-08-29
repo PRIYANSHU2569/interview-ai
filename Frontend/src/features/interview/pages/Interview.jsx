@@ -219,7 +219,6 @@ const Interview = () => {
               </div>
             </section>
           )}
-
           {activeNav === "behavioral" && (
             <section>
               <div className="content-header">
