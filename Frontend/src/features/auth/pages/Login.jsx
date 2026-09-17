@@ -4,7 +4,7 @@ import "../auth.form.scss";
 import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
-  const { loading, handleLogin } = useAuth();
+  const { loading, error, handleLogin } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -12,22 +12,20 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await handleLogin({ email, password });
-    navigate("/");
+    const success = await handleLogin({ email, password });
+    if (success) navigate("/workspace");
   };
 
-  if (loading) {
-    return (
-      <main>
-        <h1>Loading.......</h1>
-      </main>
-    );
-  }
-
   return (
-    <main>
-      <div className="form-container">
-        <h1>Login</h1>
+    <main className="auth-page auth-page--login">
+      <div className="form-container login-card">
+        <Link className="auth-brand" to="/">
+          Interview<span>AI</span>
+        </Link>
+        <h1>Welcome back</h1>
+        <p className="auth-subtitle">
+          Log in to continue your interview preparation.
+        </p>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="email">Email</label>
@@ -39,6 +37,9 @@ const Login = () => {
               id="email"
               name="email"
               placeholder="Enter email address"
+              value={email}
+              autoComplete="email"
+              required
             />
           </div>
           <div className="input-group">
@@ -51,12 +52,18 @@ const Login = () => {
               id="password"
               name="password"
               placeholder="Enter password"
+              value={password}
+              autoComplete="current-password"
+              required
             />
           </div>
-          <button className="button primary-button">Login</button>
+          <button className="button primary-button" disabled={loading}>
+            {loading ? "Logging in..." : "Log in"}
+          </button>
         </form>
+        {error && <p className="form-error" role="alert">{error}</p>}
         <p>
-          Don't have an account? <Link to={"/register"}>Register</Link>{" "}
+          Don't have an account? <Link to="/register">Get started</Link>
         </p>
       </div>
     </main>

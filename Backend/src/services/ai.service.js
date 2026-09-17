@@ -6,6 +6,33 @@ const puppeteer = require("puppeteer");
 const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GENAI_API_KEY,
 });
+const model = process.env.GEMINI_MODEL || "gemini-3.6-flash";
+
+const delay = (milliseconds) =>
+  new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+async function generateContentWithRetry(request) {
+  const maxAttempts = 3;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    try {
+      return await ai.models.generateContent(request);
+    } catch (error) {
+      const isTemporary = error.status === 429 || error.status === 503;
+      const isLastAttempt = attempt === maxAttempts - 1;
+
+      if (!isTemporary || isLastAttempt) {
+        throw error;
+      }
+
+      const waitTime = 1000 * 2 ** attempt;
+      console.warn(
+        `Gemini request failed (${error.status}). Retrying in ${waitTime}ms...`,
+      );
+      await delay(waitTime);
+    }
+  }
+}
 
 const interviewReportSchema = z.object({
   matchScore: z
@@ -99,11 +126,8 @@ async function generateInterviewReport({
   jobDescription,
 }) {
 
-  console.log("========== GENERATED SCHEMA ==========");
-  console.log(JSON.stringify(zodToJsonSchema(interviewReportSchema), null, 2));
-  console.log("======================================");
-
-  const prompt = `Generate an interview report...
+  const prompt = `Create a tailored interview preparation report from the candidate information below.
+Return only JSON matching the provided schema. Use concrete, role-relevant questions and actionable preparation tasks.
 
 Resume:
 ${resume}
@@ -114,38 +138,14 @@ ${selfDescription}
 Job Description:
 ${jobDescription}`;
 
-  // const response = await ai.models.generateContent({
-  //   model: "gemini-3.5-flash",
-  //   contents: prompt,
-  //   config: {
-  //     responseMimeType: "application/json",
-  //     responseSchema: zodToJsonSchema(interviewReportSchema),
-  //   },
-  // });
-  let response;
-
-try {
-  response = await ai.models.generateContent({
-    model: "gemini-3.5-flash",
+  const response = await generateContentWithRetry({
+    model,
     contents: prompt,
     config: {
       responseMimeType: "application/json",
       responseSchema: zodToJsonSchema(interviewReportSchema),
     },
   });
-} catch (err) {
-  console.error("Gemini Error:", err);
-
-  if (err.status === 429) {
-    throw new Error(
-      "Gemini API quota exceeded. Please try again after a minute."
-    );
-  }
-
-  throw err;
-}
-
-  console.log(response.text);
 
   return JSON.parse(response.text);
 }
@@ -195,28 +195,14 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
                         The resume should not be so lengthy, it should ideally be 1-2 pages long when converted to PDF. Focus on quality rather than quantity and make sure to include all the relevant information that can increase the candidate's chances of getting an interview call for the given job description.
                     `;
 
-  let response;
-
-try {
-  response = await ai.models.generateContent({
-    model: "gemini-3.5-flash",
+  const response = await generateContentWithRetry({
+    model,
     contents: prompt,
     config: {
       responseMimeType: "application/json",
       responseSchema: zodToJsonSchema(resumePdfSchema),
     },
   });
-} catch (err) {
-  console.error("Gemini Error:", err);
-
-  if (err.status === 429) {
-    throw new Error(
-      "Gemini API quota exceeded. Please try again after a minute."
-    );
-  }
-
-  throw err;
-}
 
   const jsonContent = JSON.parse(response.text);
 

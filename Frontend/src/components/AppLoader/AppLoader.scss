@@ -1,0 +1,36 @@
+.app-loader {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+  background: radial-gradient(circle at top, #232b46, #0d1117 55%);
+  color: #e6edf3;
+
+  &__mark {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, #ff2d78, #8b5cf6);
+    font-weight: 800;
+    letter-spacing: -0.08em;
+  }
+
+  &__spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    border-top-color: #ff2d78;
+    border-radius: 50%;
+    animation: app-loader-spin 0.75s linear infinite;
+  }
+
+  h1 { font-size: 1.2rem; }
+  p { color: #9ba7bc; }
+}
+
+@keyframes app-loader-spin { to { transform: rotate(360deg); } }

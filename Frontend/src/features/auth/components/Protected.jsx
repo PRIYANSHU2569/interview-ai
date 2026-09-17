@@ -1,20 +1,17 @@
 import { useAuth } from "../hooks/useAuth";
 import { Navigate } from "react-router";
 import React from "react";
+import AppLoader from "../../../components/AppLoader/AppLoader";
 
 const Protected = ({ children }) => {
-  const { loading, user } = useAuth();
+  const { isInitializing, user } = useAuth();
 
-  if (loading) {
-    return (
-      <main>
-        <h1>Loading...</h1>
-      </main>
-    );
+  if (isInitializing) {
+    return <AppLoader title="Checking your session" />;
   }
 
   if (!user) {
-    return <Navigate to={"/login"} />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;

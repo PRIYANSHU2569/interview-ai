@@ -9,32 +9,60 @@ const interviewReportModel = require("../models/interviewReport.model");
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
 async function generateInterViewReportController(req, res) {
-  const resumeContent = await new pdfParse.PDFParse(
-    Uint8Array.from(req.file.buffer),
-  ).getText();
   const { selfDescription, jobDescription } = req.body;
 
-  const interViewReportByAi = await generateInterviewReport({
-    resume: resumeContent.text,
-    selfDescription,
-    jobDescription,
-  });
-  console.log("AI Response:", interViewReportByAi);
-  const interviewReport = await interviewReportModel.create({
-    //make change 1
-    title: jobDescription,
-    //
-    user: req.user.id,
-    resume: resumeContent.text,
-    selfDescription,
-    jobDescription,
-    ...interViewReportByAi,
-  });
+  if (!jobDescription?.trim()) {
+    return res.status(400).json({ message: "A job description is required." });
+  }
+  if (!req.file && !selfDescription?.trim()) {
+    return res.status(400).json({ message: "Upload a resume or add a self description." });
+  }
+  if (req.file && req.file.mimetype !== "application/pdf") {
+    return res.status(400).json({ message: "Only PDF resumes are supported." });
+  }
 
-  res.status(201).json({
-    message: "Interview report generated successfully.",
-    interviewReport,
-  });
+  try {
+    const resumeContent = req.file
+      ? await new pdfParse.PDFParse(Uint8Array.from(req.file.buffer)).getText()
+      : { text: "" };
+
+    const interViewReportByAi = await generateInterviewReport({
+      resume: resumeContent.text,
+      selfDescription,
+      jobDescription,
+    });
+    const interviewReport = await interviewReportModel.create({
+      title: interViewReportByAi.title || jobDescription,
+      user: req.user.id,
+      resume: resumeContent.text,
+      selfDescription,
+      jobDescription,
+      ...interViewReportByAi,
+    });
+
+    return res.status(201).json({
+      message: "Interview report generated successfully.",
+      interviewReport,
+    });
+  } catch (error) {
+    console.error("Interview report generation error:", error);
+
+    if (error.status === 429 || error.status === 503) {
+      return res.status(error.status).json({
+        message: "The AI service is busy. Please try again in a moment.",
+      });
+    }
+
+    if (error.status === 404) {
+      return res.status(500).json({
+        message: "The configured AI model is unavailable. Check GEMINI_MODEL in the server environment.",
+      });
+    }
+
+    return res.status(500).json({
+      message: "Could not generate the interview report. Please try again.",
+    });
+  }
 }
 
 /**
@@ -111,8 +139,10 @@ async function generateResumePdfController(req, res) {
   try {
     const { interviewReportId } = req.params;
 
-    const interviewReport =
-      await interviewReportModel.findById(interviewReportId);
+    const interviewReport = await interviewReportModel.findOne({
+      _id: interviewReportId,
+      user: req.user.id,
+    });
 
     if (!interviewReport) {
       return res.status(404).json({

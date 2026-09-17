@@ -1,19 +1,24 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import "../style/home.scss";
 import { useInterview } from "../hooks/useInterview.js";
 import { useNavigate } from "react-router";
 
 const Home = () => {
-  const { loading, generateReport, reports } = useInterview();
+  const { loading, generateReport, reports, error } = useInterview();
   const [jobDescription, setJobDescription] = useState("");
   const [selfDescription, setSelfDescription] = useState("");
   const [resumeFile, setResumeFile] = useState(null);
-const [resumeName, setResumeName] = useState("");
+  const [resumeName, setResumeName] = useState("");
+  const [formError, setFormError] = useState("");
 
   const navigate = useNavigate();
 
- const handleGenerateReport = async () => {
- 
+  const handleGenerateReport = async () => {
+    if (!jobDescription.trim() || (!resumeFile && !selfDescription.trim())) {
+      setFormError("Add a job description and either a PDF resume or a self-description.");
+      return;
+    }
+    setFormError("");
 
   const data = await generateReport({
     jobDescription,
@@ -24,7 +29,7 @@ const [resumeName, setResumeName] = useState("");
   if (data) {
     navigate(`/interview/${data._id}`);
   }
-};
+  };
   if (loading) {
     return (
       <main className="loading-screen">
@@ -142,7 +147,7 @@ const [resumeName, setResumeName] = useState("");
   {resumeName || "Click to upload or drag & drop"}
 </p>
                <p className="dropzone__subtitle">
-  {resumeName ? "✅ Resume uploaded successfully" : "PDF or DOCX (Max 3MB)"}
+  {resumeName ? "Resume uploaded successfully" : "PDF (Max 3MB)"}
 </p>
 
                 <input
@@ -150,7 +155,7 @@ const [resumeName, setResumeName] = useState("");
   type="file"
   id="resume"
   name="resume"
-  accept=".pdf,.docx"
+  accept=".pdf,application/pdf"
   onChange={(e) => {
     const file = e.target.files[0];
 
@@ -167,9 +172,7 @@ const [resumeName, setResumeName] = useState("");
                 <div className="uploaded-file">
                   <div className="file-name">📄 {resumeName}</div>
 
-                  <div className="file-status">
-                    ✔ Resume uploaded successfully
-                  </div>
+                  <div className="file-status">Resume uploaded successfully</div>
                 </div>
               )}
             </div>
@@ -251,6 +254,11 @@ const [resumeName, setResumeName] = useState("");
             Generate My Interview Strategy
           </button>
         </div>
+        {(formError || error) && (
+          <p className="form-error form-error--plan" role="alert">
+            {formError || error}
+          </p>
+        )}
       </div>
 
       {/* Recent Reports List */}

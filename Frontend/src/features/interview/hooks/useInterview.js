@@ -16,7 +16,7 @@ export const useInterview = () => {
     throw new Error("useInterview must be used within an InterviewProvider");
   }
 
-  const { loading, setLoading, report, setReport, reports, setReports } =
+  const { loading, setLoading, report, setReport, reports, setReports, error, setError } =
     context;
 
   const generateReport = async ({
@@ -25,6 +25,7 @@ export const useInterview = () => {
     resumeFile,
   }) => {
     setLoading(true);
+    setError("");
     let response = null;
     try {
       response = await generateInterviewReport({
@@ -34,8 +35,11 @@ export const useInterview = () => {
       });
       console.log(response);
       setReport(response.interviewReport);
-    } catch (error) {
-      console.log(error);
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message ||
+          "Could not generate your interview plan. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -56,7 +60,7 @@ export const useInterview = () => {
     } finally {
       setLoading(false);
     }
-    return response.interviewReport;
+    return response?.interviewReport || null;
   };
 
   const getReports = async () => {
@@ -71,7 +75,7 @@ export const useInterview = () => {
       setLoading(false);
     }
 
-    return response.interviewReports;
+    return response?.interviewReports || [];
   };
 
   const getResumePdf = async (interviewReportId) => {
@@ -106,6 +110,7 @@ export const useInterview = () => {
     loading,
     report,
     reports,
+    error,
     generateReport,
     getReportById,
     getReports,
